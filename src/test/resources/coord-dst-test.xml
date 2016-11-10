@@ -1,0 +1,26 @@
+<coordinator-app name="testDSTCoordinator"
+                 frequency="${coord:days(1)}" start="${start}" end="${end}"
+                 timezone="America/Los_Angeles"
+                 xmlns="uri:oozie:coordinator:0.4">
+
+    <datasets>
+        <dataset name="testDST" frequency="${coord:days(1)}" initial-instance="${initialTime}" timezone="America/Los_Angeles">
+            <uri-template>
+                hdfs:///user/test/testDST/day=${YEAR}${MONTH}${DAY}
+            </uri-template>
+        </dataset>
+    </datasets>
+    
+    <input-events>
+        <data-in name="input" dataset="testDST">
+            <instance>${coord:current(-1)}</instance><!-- Yesterday! -->
+        </data-in>
+    </input-events>
+    
+    <action>
+        <workflow>
+            <app-path>${workflowPath}</app-path>
+        </workflow>
+    </action>
+    
+</coordinator-app>

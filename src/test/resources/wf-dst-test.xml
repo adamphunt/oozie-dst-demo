@@ -1,0 +1,10 @@
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="dstTest-wf">
+    <start to="end"/>
+
+    <kill name="fail">
+        <message>Workflow failed, error message[${wf:errorMessage(wf:lastErrorNode())}]
+        </message>
+    </kill>
+    <end name='end'/>
+
+</workflow-app>
