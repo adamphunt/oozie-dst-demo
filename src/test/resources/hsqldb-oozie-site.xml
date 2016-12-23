@@ -27,9 +27,11 @@
         <value>jdbc:hsqldb:mem:oozie-db;create=true</value>
     </property>
     <!-- DON'T USE THIS!! Specify the coordinator start time in UTC. Oozie can handle the rest.
+    Although the nominal time will be in PDT, the instance variables will be in UTC.
+    I haven't figured out how to deal with this yet.
+    -->
     <property>
         <name>oozie.processing.timezone</name>
         <value>GMT-0800</value>
     </property>
-    -->
 </configuration>

@@ -1,23 +1,23 @@
 <coordinator-app name="testDSTCoordinator"
                  frequency="${coord:days(1)}" start="${start}" end="${end}"
-                 timezone="America/Los_Angeles"
+                 timezone="UTC"
                  xmlns="uri:oozie:coordinator:0.4">
 
     <datasets>
         <dataset name="testDaily" frequency="${coord:days(1)}" initial-instance="${initialTime}"
-                 timezone="America/Los_Angeles">
+                 timezone="UTC">
             <uri-template>
                 hdfs:///user/test/testDaily/day=${YEAR}${MONTH}${DAY}
             </uri-template>
         </dataset>
         <dataset name="testHourly" frequency="${coord:hours(1)}" initial-instance="${initialTime}"
-                 timezone="America/Los_Angeles">
+                 timezone="UTC">
             <uri-template>
                 hdfs:///user/test/testHourly/day=${YEAR}${MONTH}${DAY}${HOUR}
             </uri-template>
         </dataset>
         <dataset name="testBiHourly" frequency="${coord:hours(2)}" initial-instance="${initialTime}"
-                 timezone="America/Los_Angeles">
+                 timezone="UTC">
             <uri-template>
                 hdfs:///user/test/testHourly/day=${YEAR}${MONTH}${DAY}${HOUR}
             </uri-template>
@@ -25,14 +25,16 @@
     </datasets>
 
     <input-events>
+        <!-- Yesterday! -->
         <data-in name="inputDaily" dataset="testDaily">
             <instance>${coord:current(-1)}</instance>
         </data-in>
+
         <data-in name="inputHourly" dataset="testHourly">
-            <start-instance>
-            </start-instance>
-            <end-instance>${coord:current( -6 -coord:tzOffset()/60)}</end-instance>
+            <start-instance>${coord:current(-24)}</start-instance>
+            <end-instance>${coord:current(-1)}</end-instance>
         </data-in>
+
     </input-events>
 
     <action>
