@@ -13,13 +13,13 @@
         <dataset name="testHourly" frequency="${coord:hours(1)}" initial-instance="${initialTime}"
                  timezone="UTC">
             <uri-template>
-                hdfs:///user/test/testHourly/day=${YEAR}${MONTH}${DAY}${HOUR}
+                hdfs:///user/test/testHourly/hour=${YEAR}${MONTH}${DAY}${HOUR}
             </uri-template>
         </dataset>
         <dataset name="testBiHourly" frequency="${coord:hours(2)}" initial-instance="${initialTime}"
                  timezone="UTC">
             <uri-template>
-                hdfs:///user/test/testHourly/day=${YEAR}${MONTH}${DAY}${HOUR}
+                hdfs:///user/test/testHourly/hour=${YEAR}${MONTH}${DAY}${HOUR}
             </uri-template>
         </dataset>
     </datasets>
@@ -27,12 +27,12 @@
     <input-events>
         <!-- Yesterday! -->
         <data-in name="inputDaily" dataset="testDaily">
-            <instance>${coord:current(-1)}</instance>
+            <instance>${coord:current(0)}</instance>
         </data-in>
 
         <data-in name="inputHourly" dataset="testHourly">
-            <start-instance>${coord:current(-24)}</start-instance>
-            <end-instance>${coord:current(-1)}</end-instance>
+            <start-instance>${coord:current(-18)}</start-instance>
+            <end-instance>${coord:current(5)}</end-instance>
         </data-in>
 
     </input-events>

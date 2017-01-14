@@ -1,6 +1,5 @@
 package com.riskiq.oozie;
 
-import com.google.common.collect.ImmutableSet;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.hadoop.fs.Path;
 import org.apache.oozie.client.CoordinatorAction;
@@ -19,22 +18,18 @@ import java.util.*;
 /**
  * @author ahunt
  */
-abstract public class SimpleOozieTestCase extends MiniOozieTestCase {
+abstract public class OozieCoordinatorTestCase extends MiniOozieTestCase {
 
 
     private Path appPath;
 
     static final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'hh:mmZ");
 
-    @BeforeClass
-    public void beforeClass() {
-        System.setProperty("oozie.test.metastore.server", "false");
-        System.setProperty(XLogService.LOG4J_FILE, "oozie-log4j.properties");
-    }
-
-
     @Override
     protected void setUp() throws Exception {
+        System.setProperty("oozie.test.metastore.server", "false");
+        System.setProperty(XLogService.LOG4J_FILE, "oozie-log4j.properties");
+
         super.setUp();
 
         FileSystem fs = getFileSystem();
@@ -59,13 +54,13 @@ abstract public class SimpleOozieTestCase extends MiniOozieTestCase {
     ) throws IOException, OozieClientException {
         FileSystem fs = getFileSystem();
 
-        Reader reader = getResourceAsReader(coordinatorConfigPath, -1);
+        Reader reader = getResourceAsReader(coordinatorConfigPath);
         Writer writer = new OutputStreamWriter(fs.create(new Path(appPath, "coordinator.xml")));
         copyCharStream(reader, writer);
         writer.close();
         reader.close();
 
-        reader = getResourceAsReader(workflowConfigPath, -1);
+        reader = getResourceAsReader(workflowConfigPath);
         writer = new OutputStreamWriter(fs.create(new Path(appPath, "workflow.xml")));
         copyCharStream(reader, writer);
         writer.close();
@@ -105,18 +100,18 @@ abstract public class SimpleOozieTestCase extends MiniOozieTestCase {
     }
 
     void checkDependencies(List<CoordinatorAction> actions,
-                      List<Date> expectedNominalTimes,
-                      List<Set<String>> expectedDependencies) {
+                           List<Date> expectedNominalTimes,
+                           List<Set<String>> expectedDependencies) {
         assertEquals(expectedNominalTimes.size(), actions.size());
         assertEquals(expectedDependencies.size(), actions.size());
 
         for (int i = 0; i < actions.size(); i++) {
             assertEquals(expectedNominalTimes.get(i), actions.get(i).getNominalTime());
 
-            Set<String> dependencies = new HashSet<String>();
+            Set<String> dependencies = new HashSet<>();
             Collections.addAll(dependencies, actions.get(i).getMissingDependencies().split("#"));
 
-            assertEquals(expectedDependencies.get(i).size(), dependencies.size());
+            assertEquals("Dependencies: " + dependencies, expectedDependencies.get(i).size(), dependencies.size());
             Set<String> expected = expectedDependencies.get(i);
             for (String dependency : dependencies) {
                 assertTrue("Dependency should be in set: " + dependency + " : " + actions.get(i).getNominalTime() + " : " + expected + " : " + dependencies, expected.contains(dependency));
@@ -124,7 +119,7 @@ abstract public class SimpleOozieTestCase extends MiniOozieTestCase {
         }
     }
 
-    private InputStream getResourceAsStream(String path, int maxLen) throws IOException {
+    private InputStream getResourceAsStream(String path) throws IOException {
         InputStream is = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
         if (is == null) {
             throw new IllegalArgumentException("resource " + path + " not found");
@@ -132,8 +127,8 @@ abstract public class SimpleOozieTestCase extends MiniOozieTestCase {
         return is;
     }
 
-    private Reader getResourceAsReader(String path, int maxLen) throws IOException {
-        return new InputStreamReader(getResourceAsStream(path, maxLen));
+    private Reader getResourceAsReader(String path) throws IOException {
+        return new InputStreamReader(getResourceAsStream(path));
     }
 
     private void copyCharStream(Reader reader, Writer writer) throws IOException {
