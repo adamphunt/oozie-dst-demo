@@ -1,4 +1,4 @@
-<workflow-app xmlns="uri:oozie:workflow:0.5" name="dstTest-wf">
+<workflow-app xmlns="uri:oozie:workflow:0.5" name="dummy-wf">
     <start to="end"/>
 
     <kill name="fail">

@@ -1,0 +1,48 @@
+<coordinator-app name="testDSTCoordinator"
+                 frequency="${coord:days(1)}" start="${start}" end="${end}"
+                 timezone="UTC"
+                 xmlns="uri:oozie:coordinator:0.4">
+
+    <datasets>
+        <dataset name="testDaily" frequency="${coord:days(1)}" initial-instance="${initialTime}"
+                 timezone="UTC">
+            <uri-template>
+                hdfs:///user/test/testDaily/day=${YEAR}${MONTH}${DAY}
+            </uri-template>
+        </dataset>
+        <dataset name="testAggregate" frequency="${coord:days(1)}" initial-instance="${initialTime}"
+                 timezone="UTC">
+            <uri-template>
+                hdfs:///user/test/testAggregated/day=${YEAR}${MONTH}${DAY}
+            </uri-template>
+        </dataset>
+        <dataset name="testHourly" frequency="${coord:hours(1)}" initial-instance="${initialTime}"
+                 timezone="UTC">
+            <uri-template>
+                hdfs:///user/test/testHourly/hour=${YEAR}${MONTH}${DAY}${HOUR}
+            </uri-template>
+        </dataset>
+        <dataset name="testBiHourly" frequency="${coord:hours(2)}" initial-instance="${initialTime}"
+                 timezone="UTC">
+            <uri-template>
+                hdfs:///user/test/testHourly/day=${YEAR}${MONTH}${DAY}${HOUR}
+            </uri-template>
+        </dataset>
+    </datasets>
+
+    <input-events>
+        <data-in name="inputDaily" dataset="testDaily">
+            <instance>${coord:current(-1)}</instance>
+        </data-in>
+        <data-in name="previousAggregate" dataset="testAggregate">
+            <instance>${coord:current(-2)}</instance>
+        </data-in>
+    </input-events>
+
+    <action>
+        <workflow>
+            <app-path>${workflowPath}</app-path>
+        </workflow>
+    </action>
+
+</coordinator-app>

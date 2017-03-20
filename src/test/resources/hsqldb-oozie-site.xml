@@ -30,8 +30,4 @@
     Although the nominal time will be in PDT, the instance variables will be in UTC.
     I haven't figured out how to deal with this yet.
     -->
-    <property>
-        <name>oozie.processing.timezone</name>
-        <value>GMT-0800</value>
-    </property>
 </configuration>

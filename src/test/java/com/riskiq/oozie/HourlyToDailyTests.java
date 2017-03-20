@@ -15,17 +15,17 @@ public class HourlyToDailyTests extends OozieCoordinatorTestCase {
 
     public void testPDTtoPST() throws Exception {
         List<CoordinatorAction> actions = runDSTTest(
-                "2015-03-06T18:00-0800",
+                "2015-03-06T17:00-0800",
                 "2015-03-11T17:00-0800",
                 initialTime,
                 coordConfig);
 
         List<Date> expectedNominalTimes = new ArrayList<>();
-        expectedNominalTimes.add(sdf.parse("2015-03-06T18:00-0800"));
-        expectedNominalTimes.add(sdf.parse("2015-03-07T18:00-0800"));
-        expectedNominalTimes.add(sdf.parse("2015-03-08T18:00-0800"));
-        expectedNominalTimes.add(sdf.parse("2015-03-09T18:00-0800"));
-        expectedNominalTimes.add(sdf.parse("2015-03-10T18:00-0800"));
+        expectedNominalTimes.add(sdf.parse("2015-03-06T17:00-0800"));
+        expectedNominalTimes.add(sdf.parse("2015-03-07T17:00-0800"));
+        expectedNominalTimes.add(sdf.parse("2015-03-08T17:00-0800"));
+        expectedNominalTimes.add(sdf.parse("2015-03-09T17:00-0800"));
+        expectedNominalTimes.add(sdf.parse("2015-03-10T17:00-0800"));
 
         List<String> days = ImmutableList.of("20150306", "20150307", "20150308", "20150309", "20150310");
         List<Set<String>> expectedDependencies = generatedHourlyDependencies(days);
